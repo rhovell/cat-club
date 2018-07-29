@@ -1,5 +1,7 @@
 # Cat Club
 
+See the live version here https://rhovell.github.io/cat-club/
+
 A version of 'Cow Clicker' made with JavaScript objects
 <br>
 Select a cat's name in the sidebar, click on the cat. <br>
