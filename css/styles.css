@@ -58,7 +58,10 @@ h3 {
   margin-top: 0;
 }
 .container {
-  width: 72%;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+
 }
 .counter {
   font-weight: 400;
@@ -73,44 +76,58 @@ h3 {
   height: 3.2em;
   display: block;
 }
-aside {
-  margin-right: 5%;
-  width: 20%;
+nav {
+  margin-right: auto;
+  margin-left: auto;
+  width: 95%;
   /* float: right; */
-  position: fixed;
-  right: 0;
+  position: relative;
+  top: 20%;
+  /* right: 0; */
   font-weight: bold;
   background-color: rgb(68, 68, 68);
   border: 4px solid black;
+  height: auto;
+  overflow-x: scroll;
 }
-aside ul {
+ul {
   list-style: none;
   margin: 0;
   padding: 0;
+  /* display: inline-block; */
 }
-aside li {
-  padding-top: 1em;
+nav li {
+  /* padding-top: 1em; */
   cursor: pointer;
+  display: inline;
+  cursor: pointer;
+  width: 60px;
+  padding: 10px 15px 10px 15px;
 }
-aside li:last-child {
-  padding: 1em;
+nav li:last-child {
+  /* padding: 1em; */
 }
-aside li:hover{
+nav li:hover{
   color: rgb(212, 38, 151);
   transform: rotateY(4px);
 }
-.catBox {
-  display: none;
+.cat-box {
   width: 100%;
   padding: 10px;
-}
-.catBox.live {
-  display: block;
+
 }
 .cat {
+  display: none;
+
+}
+.cat.live {
+  display: block;
+}
+.catImage {
   width: auto;
   max-width: 100%;
   max-height: 350px;
+
 }
 .like {
   width: 3em;
