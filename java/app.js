@@ -1,145 +1,119 @@
-$(function(){
+// Global variables
 var i;
-  var allCats = {
-    "cats": [
-      {"name": "Molly", "count": [0]},
-      {"name": "Oscar", "count": [0]},
-      {"name": "Milo", "count": [0]},
-      {"name": "Gato", "count": [0]},
-      {"name": "Whiskers", "count": [0]},
-      {"name": "Joey", "count": [0]},
-      {"name": "Fred", "count": [0]}
+// Model ********************************
+var model = {
+    currentCat: null,
+    cats: [
+      {
+        name: "Molly",
+        count: 0,
+        imgSrc: "img/Molly.jpg"
+      },
+      {
+        name: "Oscar",
+        count: 0,
+        imgSrc: "img/Oscar.jpg"
+      },
+      {
+        name: "Milo",
+        count: 0,
+        imgSrc: "img/Milo.jpg"
+      },
+      {
+        name: "Gato",
+        count: 0,
+        imgSrc: "img/Gato.jpg"
+      },
+      {
+        name: "Whiskers",
+        count: 0,
+        imgSrc: "img/Whiskers.jpg"
+      },
+      {
+        name: "Joey",
+        count: 0,
+        imgSrc: "img/Joey.jpg"
+      },
+      {
+        name: "Fred",
+        count: 0,
+        imgSrc: "img/Fred.jpg"
+      }
     ]
-  };
-    var model = {
-      init: function() {
-
-          // console.log(allCats)
-          if (!localStorage.allCats) {
-              localStorage.allCats = JSON.stringify(allCats);
-          }
-      },
-      add: function(obj) {
-          var data = JSON.parse(localStorage.allCats);
-          data.push(obj);
-          localStorage.allCats = JSON.stringify(data);
-          // console.log("model.add called")
-      },
-      getAllCats: function() {
-          // console.log(localStorage.allCats)
-          return JSON.parse(localStorage.allCats);
-      },
-      like: function(result){
-        var thisCat = document.getElementById('catBox');
-        var catId = thisCat.firstChild.id;
-        var i, j;
-        // var data = JSON.parse(localStorage.allCats);
-        // // allCats.cats[i].count
-        for(i in allCats.cats){
-        // var cats = localStorage.allCats;
-        var catsCount = allCats.cats[i].count;
-        // console.log(allCats.cats[i].name + " " + catsCount)
-        var newData = allCats;
-        // newData.push(result);
-        localStorage.allCats = JSON.stringify(newData);
-        // console.log(localStorage)
-      }
-        // data.push(result)
-        // localStorage.allCats = JSON.stringify(data);
-        // console.log(allCats.cats[i].count)
-        // console.log(allCats.catId.count)
-      }
     };
 
+// Octopus ***********************
 
     var octopus = {
-      addNewCat: function(cat) {
-        model.add({
-        content: cat
-        });
-        view.render();
+      init: function() {
+        model.currentCat = model.cats[0];
+        CatListview.init();
+        catView.init();
       },
       getCats: function() {
-        // console.log("getCats called")
-        return model.getAllCats();
+        return model.cats;
       },
-
-      init: function() {
-          model.init();
-          view.init();
+      getCurrentCat: function(){
+        return model.currentCat;
       },
-    increaseCount: function(cat){
-      model.like(cat);
-    }
+      setCurrentCat: function(cat){
+        model.currentCat = cat;
+      },
+      increaseCount: function(){
+        model.currentCat.count++;
+        catView.render();
+      }
     };
 
+// CatList view  ***********************
+    var CatListview = {
+        init: function(){
+          this.catList = document.getElementById('catList');
 
-    var view = {
-        init: function() {
-          var selectCat = $('.cat-list');
-          selectCat.click(function(){
-
-            })
-          // octopus.addNewCat();
-            view.render();
-          },
-
+          this.render();
+      },
         render: function(){
+          var cats = octopus.getCats();
 
-          (function(){
-            var htmlStr = '';
-            this.catList = $('#catList');
-            var get = octopus.getCats();
+          this.catList = document.getElementById('catList');
+          this.catList.innerHTML = "";
+          for(i = 0; i < cats.length ; i++){
+            cat = cats[i];
+            var button = document.createElement('li');
+            button.textContent = cat.name;
 
-            for(i in allCats.cats){
-
-            htmlStr += '<li class="cats" id ="' + allCats.cats[i].name + '">' + allCats.cats[i].name + '</li>';
-          };
-            this.catList.html( htmlStr );
-
-          })();
             var choice = $('.cat-list');
-            var choosen = "";
-            choice.on("click", function(e){
-            var choosen = e.target.id;
-
-            var htmlStr2 = '';
-            var htmlStr3 = '';
-            (function(){
-              this.catbox = $('#catBox');
-              htmlStr2 += '<li class = "cat live" id ="' + choosen + '"><h3>' + choosen + '</h3> <img src = "img/'
-              + choosen + '.jpg" class = "catImage ' + choosen + ' img" id = "catImage' + choosen + '"></li></ul><div class = "counter" id = "' + choosen + 'counter"><img src="img/like.svg" class = "like"></div>';
-              this.catbox.html( htmlStr2 );
-              var string = allCats.cats[i];
-              // var copy = copyStringCopy;
-              var catId = "catImage" + choosen;
-              var catImage = document.getElementById(catId);
-              var counterTarget = choosen + "counter";
-              catImage.addEventListener("click", function(choosen){
-                    // function result(copyString){
-                      for(i= 0; i < allCats.cats.length; i++){
-                        
-                      var result = allCats.cats[i].count++;
-                      // result++;
-                      console.log(result)
-                  var printCount = document.getElementById(counterTarget);
-
-                  printCount.innerHTML = result + ' x <img src="img/like.svg" class = "like">';
-                  console.log(allCats.cats)
-                  return result;
-                  // }
-                }
-
-                octopus.increaseCount(choosen);
-
-              });
-            })();
-          });
+              button.addEventListener("click", (function(catCopy){
+                return function(){
+                  octopus.setCurrentCat(catCopy)
+                  catView.render();
+                };
+              })(cat));
+              this.catList.appendChild(button);
           }
-      };
+          }
+        };
+        // catview **********************
+      var catView = {
+              init: function(){
+                this.catbox = document.getElementById('catBox');
+                this.catName = document.getElementById('catName');
+                this.catImg = document.getElementById('catImg');
+                this.count = document.getElementById('cat-counter')
 
+                this.catImg.addEventListener("click", function(){
+                      octopus.increaseCount();
+                });
+                this.render();
+              },
+              render: function(){
+                var currentCat = octopus.getCurrentCat();
+                var likeImg = " x <img src='/img/like.svg' class = 'like'>";
+                this.catImg.src = currentCat.imgSrc;
+                this.count.innerHTML = currentCat.count + likeImg;
+                this.catName.textContent = currentCat.name;
+              }
+          }
+
+    // start the whole process *****************
     octopus.init();
-    // clicks on first item on page load
-    var start = document.getElementById('catList').firstChild.click();
-  });
-// console.log(localStorage)
