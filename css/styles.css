@@ -132,6 +132,9 @@ nav li:hover{
   width: 3em;
   vertical-align: middle;
 }
+#admin-area {
+  display: none;
+}
 /*
 footer styling
 */

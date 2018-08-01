@@ -2,6 +2,7 @@
 var i;
 // Model ********************************
 var model = {
+    admin: false,
     currentCat: null,
     cats: [
       {
@@ -49,6 +50,7 @@ var model = {
         model.currentCat = model.cats[0];
         CatListview.init();
         catView.init();
+        adminView.init();
       },
       getCats: function() {
         return model.cats;
@@ -58,18 +60,34 @@ var model = {
       },
       setCurrentCat: function(cat){
         model.currentCat = cat;
+        adminView.render();
       },
       increaseCount: function(){
         model.currentCat.count++;
         catView.render();
-      }
+        adminView.render();
+      },
+      showAdmin: function(){
+          model.admin = true;
+          adminView.render();
+        },
+        hideAdmin: function(){
+          model.admin = false;
+          adminView.render();
+        },
+        updateCat: function(currentCat){
+          model.currentCat.name = document.getElementById('admin-area').catName.value;
+          model.currentCat.imgSrc = document.getElementById('admin-area').catUrl.value;
+          model.currentCat.count = document.getElementById('admin-area').catClicks.value;
+          catView.render();
+          CatListview.render();
+        }
     };
 
 // CatList view  ***********************
     var CatListview = {
         init: function(){
           this.catList = document.getElementById('catList');
-
           this.render();
       },
         render: function(){
@@ -87,6 +105,7 @@ var model = {
                 return function(){
                   octopus.setCurrentCat(catCopy)
                   catView.render();
+                  // adminView.render();
                 };
               })(cat));
               this.catList.appendChild(button);
@@ -105,6 +124,7 @@ var model = {
                       octopus.increaseCount();
                 });
                 this.render();
+
               },
               render: function(){
                 var currentCat = octopus.getCurrentCat();
@@ -113,6 +133,48 @@ var model = {
                 this.count.innerHTML = currentCat.count + likeImg;
                 this.catName.textContent = currentCat.name;
               }
+          }
+          // admin view *********************************
+          var adminView = {
+            init: function(){
+              var adminButton = document.getElementById('admin-button');
+              var adminForm = document.getElementById('admin-area');
+              var cancelButton = document.getElementById('admin-area').cancelInput;
+              adminButton.addEventListener("click", show);
+              function show(){
+                adminForm.style.display = "block";
+                octopus.showAdmin();
+                adminButton.removeEventListener("click", show);
+                adminButton.addEventListener("click", hide);
+                cancelButton.addEventListener("click", hide);
+              }
+              function hide(){
+                adminForm.style.display = "none";
+                octopus.hideAdmin();
+                adminButton.addEventListener("click", show);
+              }
+              var saveButton = document.getElementById('admin-area').saveInput;
+              var currentCat = octopus.getCurrentCat();
+              saveButton.addEventListener("click", (function(event){
+                return function(event){
+                  event.preventDefault()
+                  octopus.updateCat(currentCat)
+                  octopus.hideAdmin();
+                  hide();
+                };
+              })(cat));
+              this.render();
+            },
+            render: function(){
+              var cat = octopus.getCurrentCat();
+              var nameInput = document.getElementById('admin-area').catName;
+              var urlInput = document.getElementById('admin-area').catUrl;
+              var clickInput = document.getElementById('admin-area').catClicks;
+              nameInput.value = cat.name;
+              urlInput.value = cat.imgSrc;
+              clickInput.value = cat.count;
+              console.log(cat)
+            }
           }
 
     // start the whole process *****************
